@@ -19,7 +19,7 @@ before_install:
   - if [ "$JYTHON" ]; then wget $JYTHON_URL -O jython_installer.jar; java -jar jython_installer.jar -s -d $HOME/jython; export PATH=$HOME/jython/bin:$PATH; fi
 
 script:
-  - if [ "$JYTHON" ]; then jython setup.py test; fi
+  - if [ "$JYTHON" ]; then travis_retry jython setup.py test; fi
   - if [ "$TOX_ENV" ]; then tox -e $TOX_ENV; fi
 after_success:
   - codecov
