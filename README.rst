@@ -61,7 +61,36 @@ To generate screenshots:
     >>> browser = api.list_browsers()[0]
     >>> response = api.generate_screenshots('http://www.google.com', browser)
 
-You'll get the `job_id` from response. To download screenshots:
+You'll get the `job_id` from response. To list available screenshots for `job_id`:
+
+.. code:: python
+
+    >>> api.list_screenshots(response['job_id'])
+    {
+        "id":"13b93a14db22872fcb5fd1c86b730a51197db319",
+        "state":"done",
+        "callback_url": "http://staging.example.com",
+        "win_res": "1024x768",
+        "mac_res": "1920x1080",
+        "quality": "compressed",
+        "wait_time": 5,
+        "screenshots": [
+            {
+                "os":"Windows",
+                "os_version":"XP",
+                "browser":"ie",
+                "browser_version":"7.0",
+                "id":"be9989892cbba9b9edc2c95f403050aa4996ac6a",
+                "state":"done",
+                "url":"www.google.com",
+                "thumb_url":"https://www.browserstack.com/screenshots/13b93a14db22872fcb5fd1c86b730a51197db319/thumb_winxp_ie_7.0.jpg",
+                "image_url":"https://www.browserstack.com/screenshots/13b93a14db22872fcb5fd1c86b730a51197db319/winxp_ie_7.0.png",
+                "created_at":"2013-03-14 16:25:45 UTC",
+            }
+        ]
+    }
+
+To download screenshots:
 
 .. code:: python
 

@@ -33,6 +33,13 @@ class ScreenShotsAPI:
         """
         return self.execute('GET', '/screenshots/browsers.json')
 
+    def make_screenshots(self, url, browsers, destination=None, **kwargs):
+        """
+        Generates screenshots for given settings and saves it to specified destination.
+        """
+        response = self.generate_screenshots(url, browsers, **kwargs)
+        self.download_screenshots(response['job_id'], destination)
+
     def generate_screenshots(self, url, browsers, orientation=None, mac_res=None, win_res=None,
                              quality=None, local=None, wait_time=None, callback_url=None):
         """

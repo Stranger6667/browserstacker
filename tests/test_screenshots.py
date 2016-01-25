@@ -27,6 +27,31 @@ def test_list_browsers(screenshots_api, mocked_request):
     )
 
 
+def test_make_screenshots(screenshots_api, mocked_request, mocked_get, mocked_image_response, test_dir_name, mocked_open):
+    url = 'http://www.example.com'
+    mocked_request().json.return_value = {
+        'job_id': '123',
+        'screenshots': [
+            {'image_url': 'http://www.example.com/img/test_image.jpg'}
+        ]
+    }
+    mocked_get.return_value = mocked_image_response
+
+    screenshots_api.make_screenshots(url, [{}], destination=test_dir_name)
+
+    mocked_request._mock_mock_calls[1].assert_called_with(
+        'POST',
+        'https://www.browserstack.com/screenshots',
+        auth=screenshots_api.auth,
+        json={'url': url, 'browsers': [{}]}
+    )
+    # `open` args
+    assert mocked_open._mock_mock_calls[0][1] == (os.path.join(test_dir_name, 'test_image.jpg'), 'wb')
+    # `fd.write` args
+    assert mocked_open._mock_mock_calls[2][1] == (mocked_image_response.content, )
+    assert os.path.exists(test_dir_name)
+
+
 @pytest.mark.parametrize('browsers', ([{}], {}))
 def test_generate_screenshots(screenshots_api, mocked_request, browsers):
     url = 'http://www.example.com'

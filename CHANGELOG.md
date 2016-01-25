@@ -1,10 +1,16 @@
 History
 -------
 
+0.3 - TBD
+---------
+
+* Added `make_screenshots` shortcut (#7).
+
+
 0.2 - 25.01.2016
 ---------
 
-* Use single `requests` session for all calls (#1).
+* Used single `requests` session for all calls (#1).
 * Package is uploaded to PyPI (#2).
 * Documentation added (#6).
 

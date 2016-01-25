@@ -22,7 +22,7 @@ def mocked_request(request):
 
 @pytest.fixture
 def mocked_get(request):
-    return _make_mock(request, 'browserstacker.screenshots.requests.Session.request', Mock())
+    return _make_mock(request, 'browserstacker.screenshots.requests.Session.get', Mock())
 
 
 @pytest.fixture(scope='session')
