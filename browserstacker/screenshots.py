@@ -52,11 +52,13 @@ class ScreenShotsAPI:
         if destination:
             self.ensure_dir(destination)
         for screenshot in response['screenshots']:
-            self.save_screenshot(screenshot['image_url'])
+            self.save_screenshot(screenshot['image_url'], destination)
 
-    def save_screenshot(self, image_url):
+    def save_screenshot(self, image_url, destination=None):
         image_response = requests.get(image_url, stream=True)
         filename = image_url.split('/')[-1]
+        if destination:
+            filename = os.path.join(destination, filename)
         self.save_file(filename, image_response)
 
     def ensure_dir(self, destination):
