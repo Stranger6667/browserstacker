@@ -40,15 +40,15 @@ To start working with BrowserStack ScreenShots API simply type:
         {
           "os": "Windows",
           "os_version": "XP",
-          "browser": "chrome"
-          "browser_version": "21.0"
+          "browser": "chrome",
+          "browser_version": "21.0",
           "device": null
         },
         {
           "os": "ios",
           "os_version": "6.0",
-          "browser": "Mobile Safari"
-          "browser_version": null
+          "browser": "Mobile Safari",
+          "browser_version": null,
           "device": "iPhone 4S (6.0)"
         }
       ....
