@@ -17,12 +17,12 @@ def _make_mock(request, name, return_value):
 
 @pytest.fixture
 def mocked_request(request):
-    return _make_mock(request, 'requests.request', Mock())
+    return _make_mock(request, 'requests.Session.request', Mock())
 
 
 @pytest.fixture
 def mocked_get(request):
-    return _make_mock(request, 'browserstacker.screenshots.requests.get', Mock())
+    return _make_mock(request, 'browserstacker.screenshots.requests.Session.request', Mock())
 
 
 @pytest.fixture(scope='session')

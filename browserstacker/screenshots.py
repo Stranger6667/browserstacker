@@ -16,10 +16,16 @@ class ScreenShotsAPI:
     def __init__(self, user, key):
         self.auth = HTTPBasicAuth(user, key)
 
+    @property
+    def session(self):
+        if not hasattr(self, '_session'):
+            self._session = requests.Session()
+        return self._session
+
     def execute(self, method, url, **kwargs):
         kwargs.setdefault('auth', self.auth)
         url = urljoin(self.root_url, url)
-        return requests.request(method, url, **kwargs).json()
+        return self.session.request(method, url, **kwargs).json()
 
     def list_browsers(self):
         """
@@ -54,7 +60,7 @@ class ScreenShotsAPI:
             self.save_screenshot(screenshot['image_url'], destination)
 
     def save_screenshot(self, image_url, destination=None):
-        image_response = requests.get(image_url, stream=True)
+        image_response = self.session.get(image_url, stream=True)
         filename = image_url.split('/')[-1]
         if destination:
             filename = os.path.join(destination, filename)
