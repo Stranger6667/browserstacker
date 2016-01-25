@@ -49,8 +49,7 @@ class ScreenShotsAPI:
         If `destination` is None, then screenshots will be saved in current directory.
         """
         response = self.list_screenshots(job_id)
-        if destination:
-            self.ensure_dir(destination)
+        self.ensure_dir(destination)
         for screenshot in response['screenshots']:
             self.save_screenshot(screenshot['image_url'], destination)
 
@@ -65,7 +64,7 @@ class ScreenShotsAPI:
         """
         Checks, that `destination` exists.
         """
-        if not os.path.exists(destination):
+        if destination and not os.path.exists(destination):
             os.makedirs(destination)
 
     def save_file(self, filename, content):

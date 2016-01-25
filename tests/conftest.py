@@ -37,7 +37,7 @@ def mocked_image_response():
         content = b'test'
 
         def iter_content(self, chunk_size=1024):
-            for chunk in (self.content, ):
+            for chunk in (self.content, None):
                 yield chunk
 
     return MockedContent()
