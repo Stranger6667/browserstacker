@@ -5,9 +5,7 @@ import pytest
 
 from browserstacker import ScreenShotsAPI
 from ._compat import patch
-
-
-IMAGE_URL = 'http://www.example/screenshots/test_save.jpg'
+from .conftest import IMAGE_URL
 
 
 def test_execute(screenshots_api, mocked_request):

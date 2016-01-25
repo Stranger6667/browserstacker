@@ -1,10 +1,32 @@
 # coding: utf-8
+import logging
 import os
+import sys
 
 import requests
 from requests.auth import HTTPBasicAuth
 
 from ._compat import urljoin
+
+
+DEFAULT_LOGGING_LEVEL = logging.CRITICAL
+
+
+def get_logger(verbosity):
+    """
+    Returns simple console logger.
+    """
+    logger = logging.getLogger(__name__)
+    logger.setLevel({
+        0: DEFAULT_LOGGING_LEVEL,
+        1: logging.INFO,
+        2: logging.DEBUG
+    }.get(verbosity, DEFAULT_LOGGING_LEVEL))
+    handler = logging.StreamHandler(sys.stdout)
+    handler.setLevel(logging.DEBUG)
+    handler.setFormatter(logging.Formatter('%(name)s - %(levelname)s - %(message)s'))
+    logger.addHandler(handler)
+    return logger
 
 
 class ScreenShotsAPI:
@@ -20,9 +42,12 @@ class ScreenShotsAPI:
         'device': None
     }
 
-    def __init__(self, user, key, default_browser=None):
+    def __init__(self, user, key, default_browser=None, verbosity=0):
         self.auth = HTTPBasicAuth(user, key)
         self.default_browser = default_browser or self.default_browser
+        self.logger = get_logger(verbosity)
+        self.logger.info('Username: %s; Password: %s;', user, key)
+        self.logger.info('Default browser: %s;', self.default_browser)
 
     @property
     def session(self):
@@ -31,9 +56,12 @@ class ScreenShotsAPI:
         return self._session
 
     def execute(self, method, url, **kwargs):
-        kwargs.setdefault('auth', self.auth)
         url = urljoin(self.root_url, url)
-        return self.session.request(method, url, **kwargs).json()
+        self.logger.debug('Making "%s" request to "%s" with "%s"', method, url, str(kwargs))
+        kwargs.setdefault('auth', self.auth)
+        response = self.session.request(method, url, **kwargs)
+        self.logger.debug('Response: "%s"', response.content)
+        return response.json()
 
     def list_browsers(self):
         """
@@ -81,6 +109,7 @@ class ScreenShotsAPI:
         filename = image_url.split('/')[-1]
         if destination:
             filename = os.path.join(destination, filename)
+        self.logger.debug('Saving "%s" to "%s" ...', image_url, filename)
         self.save_file(filename, image_response)
 
     def ensure_dir(self, destination):

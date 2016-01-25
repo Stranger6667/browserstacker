@@ -63,3 +63,6 @@ def mocked_open(request):
     mock.start()
     request.addfinalizer(mock.stop)
     return mock.new
+
+
+IMAGE_URL = 'http://www.example/screenshots/test_save.jpg'
