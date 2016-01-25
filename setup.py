@@ -50,7 +50,7 @@ if not JYTHON:
 setup(
     name='browserstacker',
     url='https://github.com/Stranger6667/browserstacker',
-    version='0.1',
+    version='0.2',
     packages=['browserstacker'],
     license='MIT',
     author='Dmitry Dygalo',
@@ -60,7 +60,7 @@ setup(
     keywords=['browserstack', 'screenshots', 'testing'],
     description='Python wrapper for BrowserStack features.',
     classifiers=[
-        'Development Status :: 3 - Beta',
+        'Development Status :: 4 - Beta',
         'Environment :: Console',
         'Intended Audience :: Developers',
         'Operating System :: OS Independent',
@@ -75,6 +75,8 @@ setup(
         'Programming Language :: Python :: Implementation :: CPython',
         'Programming Language :: Python :: Implementation :: PyPy',
         'Programming Language :: Python :: Implementation :: Jython',
+        'Topic :: Software Development :: Testing',
+        'Topic :: Software Development :: User Interfaces',
     ],
     cmdclass={'test': PyTest},
     include_package_data=True,
