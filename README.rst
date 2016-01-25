@@ -61,6 +61,7 @@ To generate screenshots:
     >>> browser = api.list_browsers()[0]
     >>> response = api.generate_screenshots('http://www.google.com', browser)
 
+Here you can pass single browsers or list of them.
 You'll get the `job_id` from response. To list available screenshots for `job_id`:
 
 .. code:: python
