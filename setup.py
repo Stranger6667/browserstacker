@@ -34,7 +34,7 @@ class PyTest(TestCommand):
         sys.exit(errno)
 
 
-requirements = ['requests>=2.9.0']
+requirements = ['requests>=2.9.0', 'click>=6.2']
 test_requirements = ['pytest>=2.8.0']
 
 
@@ -50,7 +50,7 @@ if not JYTHON:
 setup(
     name='browserstacker',
     url='https://github.com/Stranger6667/browserstacker',
-    version='0.2',
+    version='0.2.1',
     packages=['browserstacker'],
     license='MIT',
     author='Dmitry Dygalo',

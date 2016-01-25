@@ -12,9 +12,17 @@ class ScreenShotsAPI:
     Wrapper for BrowserStack Screenshots API.
     """
     root_url = 'https://www.browserstack.com/'
+    default_browser = {
+        'browser_version': '37.0',
+        'os': 'Windows',
+        'browser': 'firefox',
+        'os_version': '8.1',
+        'device': None
+    }
 
-    def __init__(self, user, key):
+    def __init__(self, user, key, default_browser=None):
         self.auth = HTTPBasicAuth(user, key)
+        self.default_browser = default_browser or self.default_browser
 
     @property
     def session(self):
@@ -40,13 +48,15 @@ class ScreenShotsAPI:
         response = self.generate_screenshots(url, browsers, **kwargs)
         self.download_screenshots(response['job_id'], destination)
 
-    def generate_screenshots(self, url, browsers, orientation=None, mac_res=None, win_res=None,
+    def generate_screenshots(self, url, browsers=None, orientation=None, mac_res=None, win_res=None,
                              quality=None, local=None, wait_time=None, callback_url=None):
         """
         Generates screenshots for a URL.
         """
         if isinstance(browsers, dict):
             browsers = [browsers]
+        if browsers is None:
+            browsers = [self.default_browser]
         data = dict((key, value) for key, value in locals().items() if value is not None and key != 'self')
         return self.execute('POST', '/screenshots', json=data)
 

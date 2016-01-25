@@ -3,6 +3,7 @@ import os
 
 import pytest
 
+from browserstacker import ScreenShotsAPI
 from ._compat import patch
 
 
@@ -52,15 +53,22 @@ def test_make_screenshots(screenshots_api, mocked_request, mocked_get, mocked_im
     assert os.path.exists(test_dir_name)
 
 
-@pytest.mark.parametrize('browsers', ([{}], {}))
-def test_generate_screenshots(screenshots_api, mocked_request, browsers):
+@pytest.mark.parametrize(
+    'browsers, resulting_browsers',
+    (
+        (None, [ScreenShotsAPI.default_browser]),
+        ({}, [{}]),
+        ([{}], [{}]),
+    )
+)
+def test_generate_screenshots(screenshots_api, mocked_request, browsers, resulting_browsers):
     url = 'http://www.example.com'
     screenshots_api.generate_screenshots(url, browsers)
     mocked_request.assert_called_with(
         'POST',
         'https://www.browserstack.com/screenshots',
         auth=screenshots_api.auth,
-        json={'url': url, 'browsers': [{}]}
+        json={'url': url, 'browsers': resulting_browsers}
     )
 
 

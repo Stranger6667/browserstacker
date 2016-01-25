@@ -1,10 +1,11 @@
 History
 -------
 
-0.3 - TBD
+0.2.1 - 25.01.2016
 ---------
 
 * Added `make_screenshots` shortcut (#7).
+* Added default_browser option (#8).
 
 
 0.2 - 25.01.2016
