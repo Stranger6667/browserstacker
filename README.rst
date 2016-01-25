@@ -97,7 +97,13 @@ To download screenshots:
     >>> api.download_screenshots(response['job_id'], 'path_to_screenshots_dir')
 
 
-All screenshots will be saved in 'path_to_screenshots_dir'.
+All screenshots will be saved in 'path_to_screenshots_dir'. If `destination` kwarg is absent, then screenshots will be
+downloaded to current working directory.
+Also you can use shortcut to create & download screenshots to your local machine:
+
+.. code:: python
+
+    >>> response = api.make_screenshots('http://www.google.com', browser, destination='path_to_screenshots_dir')
 
 Python support
 --------------
