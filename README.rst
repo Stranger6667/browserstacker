@@ -1,6 +1,6 @@
 BrowserStacker
 ==============
-Python wrapper for BrowserStack features.
+Python wrapper for `BrowserStack <https://www.browserstack.com/>`_ features.
 
 |Build Status| |codecov.io|
 
