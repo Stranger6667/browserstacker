@@ -34,7 +34,7 @@ class PyTest(TestCommand):
         sys.exit(errno)
 
 
-requirements = ['requests>=2.9.0', 'click>=6.2']
+requirements = ['requests>=2.9.0']
 test_requirements = ['pytest>=2.8.0']
 
 
