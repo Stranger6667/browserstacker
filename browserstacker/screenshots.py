@@ -68,7 +68,7 @@ class ScreenShotsAPI:
         Returns list of available browsers & OS.
         """
         response = self.execute('GET', '/screenshots/browsers.json')
-        for key, value in locals().items():
+        for key, value in list(locals().items()):
             if key in ('self', 'response') or not value:
                 continue
             response = [
