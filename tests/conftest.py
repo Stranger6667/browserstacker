@@ -25,6 +25,12 @@ def mocked_get(request):
     return _make_mock(request, 'browserstacker.screenshots.requests.Session.get', Mock())
 
 
+@pytest.fixture
+def list_browsers_response(mocked_request):
+    mocked_request().json.return_value = LIST_BROWSERS_RESPONSE
+    return mocked_request
+
+
 @pytest.fixture(scope='session')
 def screenshots_api():
     return ScreenShotsAPI(None, None)
@@ -66,3 +72,13 @@ def mocked_open(request):
 
 
 IMAGE_URL = 'http://www.example/screenshots/test_save.jpg'
+
+LIST_BROWSERS_RESPONSE = [
+    {'os': 'Windows', 'browser': 'safari', 'os_version': '8', 'browser_version': '5.1', 'device': None},
+    {'os': 'Windows', 'browser': 'firefox', 'os_version': '7', 'browser_version': '30.0', 'device': None},
+    {'os': 'OS X', 'browser': 'chrome', 'os_version': 'Lion', 'browser_version': '17.0', 'device': None},
+    {'os': 'OS X', 'browser': 'firefox', 'os_version': 'Lion', 'browser_version': '18.0', 'device': None},
+    {'os': 'ios', 'browser': 'Mobile Safari', 'os_version': '5.0', 'browser_version': None, 'device': 'iPad 2 (5.0)'},
+    {'os': 'ios', 'browser': 'Mobile Safari', 'os_version': '7.0', 'browser_version': None, 'device': 'iPad Mini'},
+    {'os': 'android', 'browser': 'Android Browser', 'os_version': '2.2', 'browser_version': None, 'device': 'HTC Wildfire'}
+]

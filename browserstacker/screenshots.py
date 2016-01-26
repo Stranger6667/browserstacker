@@ -63,11 +63,19 @@ class ScreenShotsAPI:
         self.logger.debug('Response: "%s"', response.content)
         return response.json()
 
-    def list_browsers(self):
+    def list_browsers(self, browser=None, browser_version=None, device=None, os=None, os_version=None):
         """
         Returns list of available browsers & OS.
         """
-        return self.execute('GET', '/screenshots/browsers.json')
+        response = self.execute('GET', '/screenshots/browsers.json')
+        for key, value in locals().items():
+            if key in ('self', 'response') or not value:
+                continue
+            response = [
+                item for item in response
+                if key not in item or str(item.get(key)).lower() == str(value).lower()
+            ]
+        return response
 
     def make_screenshots(self, url, browsers, destination=None, **kwargs):
         """

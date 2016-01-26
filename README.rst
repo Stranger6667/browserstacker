@@ -42,17 +42,43 @@ To start working with BrowserStack ScreenShots API simply type:
           "os_version": "XP",
           "browser": "chrome",
           "browser_version": "21.0",
-          "device": null
+          "device": None
         },
         {
           "os": "ios",
           "os_version": "6.0",
           "browser": "Mobile Safari",
-          "browser_version": null,
+          "browser_version": None,
           "device": "iPhone 4S (6.0)"
         }
       ....
     ]
+
+Optionally you can filter the output of `list_browsers` by `browser`, `browser_version`, `device`, `os` or `os_version`.
+
+.. code:: python
+
+    >>> api.list_browsers(os='Windows')
+    [
+        {
+          "os": "Windows",
+          "os_version": "XP",
+          "browser": "chrome",
+          "browser_version": "21.0",
+          "device": None
+        },
+        {
+          "os": "Windows",
+          "os_version": "7",
+          "browser": "firefox",
+          "browser_version": "30.0",
+          "device": None
+        }
+      ....
+    ]
+
+Filtration values are case insensitive and are casted to strings during filtration.
+E.g. you can use integers for filtration by `os_version` parameter.
 
 To generate screenshots:
 

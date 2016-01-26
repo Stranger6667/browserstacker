@@ -5,14 +5,13 @@ History
 ---------
 
 * Added verbose output option (#9).
-
+* Added filtration for `list_browsers` (#10).
 
 0.2.1 - 25.01.2016
 ---------
 
 * Added `make_screenshots` shortcut (#7).
 * Added default_browser option (#8).
-
 
 0.2 - 25.01.2016
 ---------

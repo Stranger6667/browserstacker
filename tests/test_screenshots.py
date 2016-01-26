@@ -17,13 +17,50 @@ def test_execute(screenshots_api, mocked_request):
     )
 
 
-def test_list_browsers(screenshots_api, mocked_request):
+def test_list_browsers(screenshots_api, list_browsers_response):
     screenshots_api.list_browsers()
-    mocked_request.assert_called_with(
+    list_browsers_response.assert_called_with(
         'GET',
         'https://www.browserstack.com/screenshots/browsers.json',
         auth=screenshots_api.auth
     )
+
+
+parametrize_filtration = pytest.mark.parametrize(
+    'filters, expected',
+    (
+        (
+            {'os': 'Windows'},
+            [
+                {'os': 'Windows', 'browser': 'safari', 'os_version': '8', 'browser_version': '5.1', 'device': None},
+                {'os': 'Windows', 'browser': 'firefox', 'os_version': '7', 'browser_version': '30.0', 'device': None}
+            ],
+        ),
+        (
+            {'browser': 'firefox', 'os_version': 'Lion'},
+            [
+                {'os': 'OS X', 'browser': 'firefox', 'os_version': 'Lion', 'browser_version': '18.0', 'device': None},
+            ]
+        ),
+        (
+            {'browser_version': 17.0},
+            [
+                {'os': 'OS X', 'browser': 'chrome', 'os_version': 'Lion', 'browser_version': '17.0', 'device': None},
+            ]
+        ),
+    )
+)
+
+
+@parametrize_filtration
+def test_list_browsers_filtration(screenshots_api, list_browsers_response, filters, expected):
+    assert screenshots_api.list_browsers(**filters) == expected
+
+
+@parametrize_filtration
+def test_list_browsers_filtration_lowercase(screenshots_api, list_browsers_response, filters, expected):
+    filters = dict((key, value.lower() if isinstance(value, str) else value) for key, value in filters.items())
+    assert screenshots_api.list_browsers(**filters) == expected
 
 
 def test_make_screenshots(screenshots_api, mocked_request, mocked_get, mocked_image_response, test_dir_name, mocked_open):
@@ -101,7 +138,7 @@ def test_ensure_dir_exists(screenshots_api, test_dir_name):
     assert os.path.exists(test_dir_name)
 
 
-def test_ensure_dir_none(screenshots_api, test_dir_name):
+def test_ensure_dir_none(screenshots_api):
     with patch('browserstacker.screenshots.os.makedirs') as makedirs:
         screenshots_api.ensure_dir(None)
         assert not makedirs.called
