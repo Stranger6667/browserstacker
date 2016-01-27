@@ -34,7 +34,7 @@ class PyTest(TestCommand):
         sys.exit(errno)
 
 
-requirements = ['requests>=2.9.0']
+requirements = ['requests>=2.9.0', 'click>=6.2']
 test_requirements = ['pytest>=2.8.0']
 
 
@@ -81,5 +81,9 @@ setup(
     cmdclass={'test': PyTest},
     include_package_data=True,
     install_requires=requirements,
-    tests_require=test_requirements
+    tests_require=test_requirements,
+    entry_points='''
+        [console_scripts]
+        browserstacker=browserstacker.cli:cli
+    ''',
 )
