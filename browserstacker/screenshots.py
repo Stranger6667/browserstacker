@@ -77,7 +77,7 @@ class ScreenShotsAPI:
             ]
         return response
 
-    def make_screenshots(self, url, browsers, destination=None, **kwargs):
+    def make_screenshots(self, url, browsers=None, destination=None, **kwargs):
         """
         Generates screenshots for given settings and saves it to specified destination.
         """
