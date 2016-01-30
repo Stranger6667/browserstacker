@@ -34,14 +34,22 @@ class PyTest(TestCommand):
         sys.exit(errno)
 
 
-requirements = ['requests>=2.9.0', 'click>=6.2']
+requirements = ['requests>=2.9.0']
 test_requirements = ['pytest>=2.8.0']
 
 
 if sys.version_info < (3, 3):
     test_requirements.append('mock==1.0.1')
-if sys.version_info[:2] == (3, 2):
+if sys.version_info[:2] == (3, 2) and not PYPY3:
     test_requirements.append('coverage==3.7.1')
+    entry_points = None
+else:
+    requirements.append('click>=6.2')
+    test_requirements.append('pytest-click')
+    entry_points = '''
+        [console_scripts]
+        browserstacker=browserstacker.cli:cli
+    '''
 
 if not JYTHON:
     test_requirements.append('pytest-cov==1.8')
@@ -50,7 +58,7 @@ if not JYTHON:
 setup(
     name='browserstacker',
     url='https://github.com/Stranger6667/browserstacker',
-    version='0.2.1',
+    version='0.3',
     packages=['browserstacker'],
     license='MIT',
     author='Dmitry Dygalo',
@@ -82,8 +90,5 @@ setup(
     include_package_data=True,
     install_requires=requirements,
     tests_require=test_requirements,
-    entry_points='''
-        [console_scripts]
-        browserstacker=browserstacker.cli:cli
-    ''',
+    entry_points=entry_points,
 )
