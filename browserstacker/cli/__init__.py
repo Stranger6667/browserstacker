@@ -5,8 +5,8 @@ from .helpers import APIWrapper, format_browsers
 
 
 @click.group()
-@click.option('-u', '--user', default=None, help='Username on BrowserStack.')
-@click.option('-k', '--key', default=None, help='Access key.')
+@click.option('-u', '--user', default=None, help='Username on BrowserStack')
+@click.option('-k', '--key', default=None, help='Access key')
 @click.option('-v', '--verbosity', count=True, help='Verbosity level')
 @click.version_option()
 @click.pass_context
@@ -28,6 +28,13 @@ def list_browsers(api):
     browsers = api.list_browsers()
     click.echo(format_browsers(browsers))
     click.echo('Total browsers: %s' % len(browsers))
+
+
+@browserstacker_command
+@click.argument('image_url', required=True)
+@click.option('-d', '--destination', default=None, help='Directory to save the image')
+def save_screenshot(api, image_url, destination):
+    click.echo(api.save_screenshot(image_url, destination))
 
 
 @browserstacker_command

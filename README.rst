@@ -54,7 +54,7 @@ To start working with BrowserStack ScreenShots API simply type:
       ....
     ]
 
-Optionally you can filter the output of `list_browsers` by `browser`, `browser_version`, `device`, `os` or `os_version`.
+Optionally you can filter the output of ``list_browsers`` by ``browser``, ``browser_version``, ``device``, ``os`` or ``os_version``.
 
 .. code:: python
 
@@ -78,7 +78,7 @@ Optionally you can filter the output of `list_browsers` by `browser`, `browser_v
     ]
 
 Filtration values are case insensitive and are casted to strings during filtration.
-E.g. you can use integers for filtration by `os_version` parameter.
+E.g. you can use integers for filtration by ``os_version`` parameter.
 
 To generate screenshots:
 
@@ -88,7 +88,7 @@ To generate screenshots:
     >>> response = api.generate_screenshots('http://www.google.com', browser)
 
 Here you can pass single browsers or list of them.
-You'll get the `job_id` from response. To list available screenshots for `job_id`:
+You'll get the ``job_id`` from response. To list available screenshots for ``job_id``:
 
 .. code:: python
 
@@ -124,7 +124,7 @@ To download screenshots:
     >>> api.download_screenshots(response['job_id'], 'path_to_screenshots_dir')
 
 
-All screenshots will be saved in 'path_to_screenshots_dir'. If `destination` kwarg is absent, then screenshots will be
+All screenshots will be saved in 'path_to_screenshots_dir'. If ``destination`` kwarg is absent, then screenshots will be
 downloaded to current working directory.
 Also you can use shortcut to create & download screenshots to your local machine:
 
@@ -132,10 +132,36 @@ Also you can use shortcut to create & download screenshots to your local machine
 
     >>> response = api.make_screenshots('http://www.google.com', browser, destination='path_to_screenshots_dir')
 
+Command line interface
+~~~~~~~~~~~~~~~~~~~~~~
+
+Browserstacker comes with command line interface built with `Click <http://click.pocoo.org/>`_.
+After installation ``browserstacker`` entry point will be available
+It exposes almost the same API as ``ScreenShotsAPI`` does.
+
+.. code:: bash
+
+    $ browserstacker --help
+    Usage: browserstacker [OPTIONS] COMMAND [ARGS]...
+
+    Options:
+      -u, --user TEXT  Username on BrowserStack
+      -k, --key TEXT   Access key
+      -v, --verbosity  Verbosity level
+      --version        Show the version and exit.
+      --help           Show this message and exit.
+
+    Commands:
+      list_browsers
+      list_screenshots
+      make_screenshots
+      save_screenshot
+
 Python support
 --------------
 
 BrowserStacker supports Python 2.6, 2.7, 3.2, 3.3, 3.4, 3.5, PyPy, PyPy3 and Jython.
+**NOTE**. CLI does not support Python 3.2.
 
 
 .. |Build Status| image:: https://travis-ci.org/Stranger6667/browserstacker.svg?branch=master

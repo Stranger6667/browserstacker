@@ -29,7 +29,7 @@ def get_logger(verbosity):
     return logger
 
 
-class ScreenShotsAPI:
+class ScreenShotsAPI(object):
     """
     Wrapper for BrowserStack Screenshots API.
     """
@@ -116,6 +116,7 @@ class ScreenShotsAPI:
         image_response = self.session.get(image_url, stream=True)
         filename = image_url.split('/')[-1]
         if destination:
+            self.ensure_dir(destination)
             filename = os.path.join(destination, filename)
         self.logger.debug('Saving "%s" to "%s" ...', image_url, filename)
         self.save_file(filename, image_response)

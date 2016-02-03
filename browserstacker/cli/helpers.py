@@ -12,6 +12,12 @@ def format_browsers(browsers):
     )
 
 
+def echo_stdout():
+    stdout = click.get_text_stream('stdout')
+    if stdout.readable():
+        stdout.read()
+
+
 class APIWrapper(ScreenShotsAPI):
     """
     Convenience wrapper for ScreenShotsAPI for better integration with command line.
@@ -19,5 +25,5 @@ class APIWrapper(ScreenShotsAPI):
 
     def __getattribute__(self, item):
         result = super(APIWrapper, self).__getattribute__(item)
-        click.get_text_stream('stdout').read()
+        echo_stdout()
         return result
