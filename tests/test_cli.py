@@ -21,6 +21,24 @@ def test_list_browsers(isolated_cli_runner):
     )
 
 
+@pytest.mark.usefixtures('list_browsers_response')
+def test_list_browsers_filtration(isolated_cli_runner):
+    BROWSER = {'os': 'OS X', 'browser': 'firefox', 'os_version': 'Lion', 'browser_version': '18.0', 'device': None}
+    result = isolated_cli_runner.invoke(
+        cli, [
+            'list_browsers',
+            '-b', BROWSER['browser'],
+            '-bv', BROWSER['browser_version'],
+            '-o', BROWSER['os'],
+            '-ov', BROWSER['os_version'],
+        ], catch_exceptions=False
+    )
+    assert not result.exception
+    assert result.output == 'Available browsers:\n%s\nTotal browsers: %s\n' % (
+        format_browsers([BROWSER]), 1
+    )
+
+
 def test_list_screenshots(isolated_cli_runner, mocked_request):
     mocked_request().json.return_value = {'screenshots': [{'image_url': IMAGE_URL}]}
     result = isolated_cli_runner.invoke(cli, ['-vv', 'list_screenshots', 'xxx'], catch_exceptions=False)
