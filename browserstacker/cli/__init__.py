@@ -38,10 +38,9 @@ def list_browsers(api, browser, browser_version, os, os_version, device):
 
 
 @browserstacker_command
-@click.argument('image_url', required=True)
-@click.option('-d', '--destination', default=None, help='Directory to save the image')
-def save_screenshot(api, image_url, destination):
-    click.echo(api.save_screenshot(image_url, destination))
+@click.argument('url', required=True)
+def make_screenshots(api, url):
+    click.echo(api.make_screenshots(url))
 
 
 @browserstacker_command
@@ -51,6 +50,14 @@ def list_screenshots(api, job_id):
 
 
 @browserstacker_command
-@click.argument('url', required=True)
-def make_screenshots(api, url):
-    click.echo(api.make_screenshots(url))
+@click.argument('job_id', required=True)
+@click.option('-d', '--destination', default=None, help='Directory to save the images')
+def download_screenshots(api, job_id, destination):
+    click.echo(api.download_screenshots(job_id, destination))
+
+
+@browserstacker_command
+@click.argument('image_url', required=True)
+@click.option('-d', '--destination', default=None, help='Directory to save the image')
+def save_screenshot(api, image_url, destination):
+    click.echo(api.save_screenshot(image_url, destination))

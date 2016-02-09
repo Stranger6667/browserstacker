@@ -138,12 +138,6 @@ def test_ensure_dir_exists(screenshots_api, test_dir_name):
     assert os.path.exists(test_dir_name)
 
 
-def test_ensure_dir_none(screenshots_api):
-    with patch('browserstacker.screenshots.os.makedirs') as makedirs:
-        screenshots_api.ensure_dir(None)
-        assert not makedirs.called
-
-
 @pytest.mark.parametrize(
     'destination, filename',
     (
