@@ -29,6 +29,16 @@ def get_logger(verbosity):
     return logger
 
 
+def match_item(key, value, item):
+    """
+    Check if some item matches criteria.
+    """
+    if isinstance(value, (list, tuple)):
+        return any(match_item(key, sub_value, item) for sub_value in value)
+    else:
+        return key not in item or str(item.get(key)).lower() == str(value).lower()
+
+
 class ScreenShotsAPI(object):
     """
     Wrapper for BrowserStack Screenshots API.
@@ -71,10 +81,7 @@ class ScreenShotsAPI(object):
         for key, value in list(locals().items()):
             if key in ('self', 'response') or not value:
                 continue
-            response = [
-                item for item in response
-                if key not in item or str(item.get(key)).lower() == str(value).lower()
-            ]
+            response = [item for item in response if match_item(key, value, item)]
         return response
 
     def make_screenshots(self, url, browsers=None, destination=None, **kwargs):

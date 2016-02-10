@@ -48,6 +48,14 @@ parametrize_filtration = pytest.mark.parametrize(
                 {'os': 'OS X', 'browser': 'chrome', 'os_version': 'Lion', 'browser_version': '17.0', 'device': None},
             ]
         ),
+        (
+            {'os': ['android', 'ios']},
+            [
+                {'os': 'ios', 'browser': 'Mobile Safari', 'os_version': '5.0', 'browser_version': None, 'device': 'iPad 2 (5.0)'},
+                {'os': 'ios', 'browser': 'Mobile Safari', 'os_version': '7.0', 'browser_version': None, 'device': 'iPad Mini'},
+                {'os': 'android', 'browser': 'Android Browser', 'os_version': '2.2', 'browser_version': None, 'device': 'HTC Wildfire'}
+            ]
+        ),
     )
 )
 
