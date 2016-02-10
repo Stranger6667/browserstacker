@@ -4,7 +4,7 @@ import click
 from .helpers import APIWrapper, format_browsers
 
 
-@click.group()
+@click.group(context_settings={'auto_envvar_prefix': 'BROWSERSTACK'})
 @click.option('-u', '--user', default=None, help='Username on BrowserStack')
 @click.option('-k', '--key', default=None, help='Access key')
 @click.option('-v', '--verbosity', count=True, help='Verbosity level')
