@@ -29,7 +29,7 @@ BROWSER = {'os': 'OS X', 'browser': 'firefox', 'os_version': 'Lion', 'browser_ve
                 'list_browsers',
                 '-b', BROWSER['browser'],
                 '-bv', BROWSER['browser_version'],
-                '-o', BROWSER['os'],
+                '-os', BROWSER['os'],
                 '-ov', BROWSER['os_version'],
             ],
             'Available browsers:\n%s\nTotal browsers: %s\n' % (format_browsers([BROWSER]), 1)
@@ -64,9 +64,24 @@ def test_list_screenshots_without_param(isolated_cli_runner):
     assert 'Error: Missing argument "job_id".' in result.output
 
 
+# TODO. Write real tests for screenshot generation
 def test_make_screenshots(isolated_cli_runner, mocked_request):
     mocked_request().json.return_value = {'job_id': JOB_ID, 'screenshots': []}
     result = isolated_cli_runner.invoke(cli, ['make_screenshots', 'http://www.google.com'], catch_exceptions=False)
+    assert not result.exception
+
+
+def test_generate_screenshots(isolated_cli_runner, mocked_request):
+    mocked_request().json.return_value = {'job_id': JOB_ID, 'screenshots': []}
+    result = isolated_cli_runner.invoke(cli, ['generate_screenshots', 'http://www.google.com'], catch_exceptions=False)
+    assert not result.exception
+
+
+def test_generate_screenshots_with_browsers(isolated_cli_runner, mocked_request):
+    mocked_request().json.return_value = {'job_id': JOB_ID, 'screenshots': []}
+    result = isolated_cli_runner.invoke(
+        cli, ['generate_screenshots', 'http://www.google.com', '-os', 'Windows'], catch_exceptions=False
+    )
     assert not result.exception
 
 
@@ -84,7 +99,7 @@ def test_download_screenshots(isolated_cli_runner, mocked_request, mocked_get, m
     'args, expected_path',
     (
         (['save_screenshot', IMAGE_URL], 'test_save.jpg'),
-        (['save_screenshot', IMAGE_URL, '-d', 'test'], 'test/test_save.jpg'),
+        (['save_screenshot', IMAGE_URL, '-ds', 'test'], 'test/test_save.jpg'),
     )
 )
 def test_save_screenshot(isolated_cli_runner, mocked_get, mocked_image_response, args, expected_path):
@@ -97,7 +112,7 @@ def test_save_screenshot(isolated_cli_runner, mocked_get, mocked_image_response,
 def test_save_screenshot_to_existing_dir(isolated_cli_runner, mocked_get, mocked_image_response):
     os.makedirs('test')
     mocked_get.return_value = mocked_image_response
-    result = isolated_cli_runner.invoke(cli, ['save_screenshot', IMAGE_URL, '-d', 'test'], catch_exceptions=False)
+    result = isolated_cli_runner.invoke(cli, ['save_screenshot', IMAGE_URL, '-ds', 'test'], catch_exceptions=False)
     assert not result.exception
     assert os.path.exists('test/test_save.jpg')
 

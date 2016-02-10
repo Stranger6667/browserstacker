@@ -152,6 +152,8 @@ It exposes almost the same API as ``ScreenShotsAPI`` does.
       --help           Show this message and exit.
 
     Commands:
+      download_screenshots
+      generate_screenshots
       list_browsers
       list_screenshots
       make_screenshots

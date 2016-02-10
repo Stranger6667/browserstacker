@@ -2,6 +2,7 @@
 import click
 
 from .helpers import APIWrapper, format_browsers
+from ..constants import ORIENTATIONS, MAC_RESOLUTIONS, WIN_RESOLUTIONS, QUALITIES, LOCALS, WAIT_TIMES
 
 
 @click.group(context_settings={'auto_envvar_prefix': 'BROWSERSTACK'})
@@ -22,25 +23,55 @@ def browserstacker_command(func):
     return cli.command()(pass_decorator(func))
 
 
+def browsers_options(func):
+    return click.option('-b', '--browser', multiple=True, help='Browser name')(
+        click.option('-bv', '--browser-version', multiple=True, help='Browser version')(
+        click.option('-os', '--os', multiple=True, help='OS name')(
+        click.option('-ov', '--os-version', multiple=True, help='OS version')(
+        click.option('-d', '--device', multiple=True, help='Device name')(func)))))
+
+
+def screenshots_options(func):
+    return click.option('-o', '--orientation', type=click.Choice(ORIENTATIONS), help='Screen orientation')(
+        click.option('-m', '--mac-res', type=click.Choice(MAC_RESOLUTIONS), help='Screen resolution on OS X')(
+        click.option('-w', '--win-res', type=click.Choice(WIN_RESOLUTIONS), help='Screen resolution on Windows')(
+        click.option('-q', '--quality', type=click.Choice(QUALITIES), help='Quality of the screenshot')(
+        click.option('-l', '--local', type=click.Choice(LOCALS), help='Local testing')(
+        click.option('-t', '--wait-time', type=click.Choice(WAIT_TIMES), help='Seconds before taking screenshot')(
+        click.option('-c', '--callback-url', help='Results will be send to this URL')(func)))))))
+
+
 @browserstacker_command
-@click.option('-b', '--browser', help='Browser name')
-@click.option('-bv', '--browser-version', help='Browser version')
-@click.option('-o', '--os', help='OS name')
-@click.option('-ov', '--os-version', help='OS version')
-@click.option('-d', '--device', help='Device name')
-def list_browsers(api, browser, browser_version, os, os_version, device):
+@browsers_options
+def list_browsers(api, **kwargs):
     click.echo('Available browsers:')
-    browsers = api.list_browsers(
-        browser=browser, browser_version=browser_version, device=device, os=os, os_version=os_version
-    )
+    browsers = api.list_browsers(**kwargs)
     click.echo(format_browsers(browsers))
     click.echo('Total browsers: %s' % len(browsers))
 
 
+def get_browsers(api, browser, browser_version, os, os_version, device):
+    if any([browser, browser_version, os, os_version, device]):
+        return api.list_browsers(browser, browser_version, device, os, os_version)
+
+
 @browserstacker_command
 @click.argument('url', required=True)
-def make_screenshots(api, url):
-    click.echo(api.make_screenshots(url))
+@click.option('-ds', '--destination', help='Directory to save the images')
+@browsers_options
+@screenshots_options
+def make_screenshots(api, url, browser, browser_version, os, os_version, device, **kwargs):
+    kwargs['browsers'] = get_browsers(api, browser, browser_version, device, os, os_version)
+    click.echo(api.make_screenshots(url, **kwargs))
+
+
+@browserstacker_command
+@click.argument('url', required=True)
+@browsers_options
+@screenshots_options
+def generate_screenshots(api, url, browser, browser_version, os, os_version, device, **kwargs):
+    kwargs['browsers'] = get_browsers(api, browser, browser_version, device, os, os_version)
+    click.echo(api.generate_screenshots(url, **kwargs))
 
 
 @browserstacker_command
@@ -51,13 +82,13 @@ def list_screenshots(api, job_id):
 
 @browserstacker_command
 @click.argument('job_id', required=True)
-@click.option('-d', '--destination', help='Directory to save the images')
+@click.option('-ds', '--destination', help='Directory to save the images')
 def download_screenshots(api, job_id, destination):
     click.echo(api.download_screenshots(job_id, destination))
 
 
 @browserstacker_command
 @click.argument('image_url', required=True)
-@click.option('-d', '--destination', help='Directory to save the image')
+@click.option('-ds', '--destination', help='Directory to save the image')
 def save_screenshot(api, image_url, destination):
     click.echo(api.save_screenshot(image_url, destination))

@@ -4,12 +4,15 @@ import click
 from ..screenshots import ScreenShotsAPI
 
 
+DELIMITER = '\n------\n'
+
+
 def format_browsers(browsers):
-    return '\n------\n'.join(
+    return DELIMITER + DELIMITER.join(
         '\n'.join(
             '%s: %s' % item for item in browser.items()
         ) for browser in browsers
-    )
+    ) + DELIMITER
 
 
 def echo_stdout():
