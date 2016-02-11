@@ -48,6 +48,14 @@ parametrize_filtration = pytest.mark.parametrize(
                 {'os': 'OS X', 'browser': 'chrome', 'os_version': 'Lion', 'browser_version': '17.0', 'device': None},
             ]
         ),
+        (
+            {'os': ['android', 'ios']},
+            [
+                {'os': 'ios', 'browser': 'Mobile Safari', 'os_version': '5.0', 'browser_version': None, 'device': 'iPad 2 (5.0)'},
+                {'os': 'ios', 'browser': 'Mobile Safari', 'os_version': '7.0', 'browser_version': None, 'device': 'iPad Mini'},
+                {'os': 'android', 'browser': 'Android Browser', 'os_version': '2.2', 'browser_version': None, 'device': 'HTC Wildfire'}
+            ]
+        ),
     )
 )
 
@@ -136,12 +144,6 @@ def test_ensure_dir_exists(screenshots_api, test_dir_name):
     os.makedirs(test_dir_name)
     screenshots_api.ensure_dir(test_dir_name)
     assert os.path.exists(test_dir_name)
-
-
-def test_ensure_dir_none(screenshots_api):
-    with patch('browserstacker.screenshots.os.makedirs') as makedirs:
-        screenshots_api.ensure_dir(None)
-        assert not makedirs.called
 
 
 @pytest.mark.parametrize(

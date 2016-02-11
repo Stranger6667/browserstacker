@@ -24,6 +24,7 @@ clean-pyc:
 	find . -name '__pycache__' -exec rm -fr {} +
 
 clean-test:
+	rm -fr .cache/
 	rm -fr .tox/
 	rm -f .coverage
 	rm -fr htmlcov/

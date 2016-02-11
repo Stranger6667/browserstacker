@@ -21,7 +21,7 @@ def get_logger(verbosity):
         0: DEFAULT_LOGGING_LEVEL,
         1: logging.INFO,
         2: logging.DEBUG
-    }.get(verbosity, DEFAULT_LOGGING_LEVEL))
+    }.get(min(2, verbosity), DEFAULT_LOGGING_LEVEL))
     handler = logging.StreamHandler(sys.stdout)
     handler.setLevel(logging.DEBUG)
     handler.setFormatter(logging.Formatter('%(name)s - %(levelname)s - %(message)s'))
@@ -29,7 +29,17 @@ def get_logger(verbosity):
     return logger
 
 
-class ScreenShotsAPI:
+def match_item(key, value, item):
+    """
+    Check if some item matches criteria.
+    """
+    if isinstance(value, (list, tuple)):
+        return any(match_item(key, sub_value, item) for sub_value in value)
+    else:
+        return key not in item or str(item.get(key)).lower() == str(value).lower()
+
+
+class ScreenShotsAPI(object):
     """
     Wrapper for BrowserStack Screenshots API.
     """
@@ -71,10 +81,7 @@ class ScreenShotsAPI:
         for key, value in list(locals().items()):
             if key in ('self', 'response') or not value:
                 continue
-            response = [
-                item for item in response
-                if key not in item or str(item.get(key)).lower() == str(value).lower()
-            ]
+            response = [item for item in response if match_item(key, value, item)]
         return response
 
     def make_screenshots(self, url, browsers=None, destination=None, **kwargs):
@@ -108,7 +115,6 @@ class ScreenShotsAPI:
         If `destination` is None, then screenshots will be saved in current directory.
         """
         response = self.list_screenshots(job_id)
-        self.ensure_dir(destination)
         for screenshot in response['screenshots']:
             self.save_screenshot(screenshot['image_url'], destination)
 
@@ -116,6 +122,7 @@ class ScreenShotsAPI:
         image_response = self.session.get(image_url, stream=True)
         filename = image_url.split('/')[-1]
         if destination:
+            self.ensure_dir(destination)
             filename = os.path.join(destination, filename)
         self.logger.debug('Saving "%s" to "%s" ...', image_url, filename)
         self.save_file(filename, image_response)
@@ -124,7 +131,7 @@ class ScreenShotsAPI:
         """
         Checks, that `destination` exists.
         """
-        if destination and not os.path.exists(destination):
+        if not os.path.exists(destination):
             os.makedirs(destination)
 
     def save_file(self, filename, content):
