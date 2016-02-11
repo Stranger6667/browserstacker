@@ -29,55 +29,6 @@ or from source:
 Usage
 -----
 
-Command line interface
-~~~~~~~~~~~~~~~~~~~~~~
-
-Browserstacker comes with command line interface built with `Click <http://click.pocoo.org/>`_.
-After installation ``browserstacker`` entry point will be available
-It exposes almost the same API as ``ScreenShotsAPI`` does. Does not support Python 3.2.
-
-To use CLI you have to pass user & key directly:
-
-.. code:: bash
-
-    $ browserstacker -u user -k key list_browsers
-    Available browsers:
-    ...
-    Total browsers: 629
-
-Or via environment variables:
-
-.. code:: bash
-
-    $ export BROWSERSTACK_USER=user
-    $ export BROWSERSTACK_KEY=key
-    $ browserstacker list_browsers
-
-Help is also available:
-
-.. code:: bash
-
-    $ browserstacker --help
-    Usage: browserstacker [OPTIONS] COMMAND [ARGS]...
-
-    Options:
-      -u, --user TEXT  Username on BrowserStack
-      -k, --key TEXT   Access key
-      -v, --verbosity  Verbosity level
-      --version        Show the version and exit.
-      --help           Show this message and exit.
-
-    Commands:
-      download_screenshots
-      generate_screenshots
-      list_browsers
-      list_screenshots
-      make_screenshots
-      save_screenshot
-
-Examples
-~~~~~~~~
-
 To start working with BrowserStack ScreenShots API simply type:
 
 .. code:: python
@@ -260,6 +211,52 @@ Command line:
 .. code:: bash
 
     $ browserstacker make_screenshots -os Windows -b firefox -bv 37.0 -ov XP -d screenshots_dir
+
+Command line interface
+~~~~~~~~~~~~~~~~~~~~~~
+
+Browserstacker comes with command line interface built with `Click <http://click.pocoo.org/>`_.
+After installation ``browserstacker`` entry point will be available
+It exposes almost the same API as ``ScreenShotsAPI`` does. Does not support Python 3.2.
+
+To use CLI you have to pass user & key directly:
+
+.. code:: bash
+
+    $ browserstacker -u user -k key list_browsers
+    Available browsers:
+    ...
+    Total browsers: 629
+
+Or via environment variables:
+
+.. code:: bash
+
+    $ export BROWSERSTACK_USER=user
+    $ export BROWSERSTACK_KEY=key
+    $ browserstacker list_browsers
+
+Help is also available:
+
+.. code:: bash
+
+    $ browserstacker --help
+    Usage: browserstacker [OPTIONS] COMMAND [ARGS]...
+
+    Options:
+      -u, --user TEXT  Username on BrowserStack
+      -k, --key TEXT   Access key
+      -v, --verbosity  Verbosity level
+      --version        Show the version and exit.
+      --help           Show this message and exit.
+
+    Commands:
+      download_screenshots
+      generate_screenshots
+      list_browsers
+      list_screenshots
+      make_screenshots
+      save_screenshotove
 
 Python support
 --------------
