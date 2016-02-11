@@ -126,6 +126,7 @@ Optionally you can filter the output of ``list_browsers`` by ``browser``, ``brow
       ....
     ]
 
+Command line:
 .. code:: bash
 
     $ browserstacker list_browsers -os Windows -b chrome
@@ -167,6 +168,7 @@ Also it is possible to filter by multiple values:
       ....
     ]
 
+Command line:
 .. code:: bash
 
     $ browserstacker list_browsers -os Windows -b chrome -b firefox
@@ -189,6 +191,7 @@ To generate screenshots:
     >>> browser = api.list_browsers()[0]
     >>> response = api.generate_screenshots('http://www.google.com', browser)
 
+Command line:
 .. code:: bash
 
     $ browserstacker generate_screenshots http://www.google.com -os Windows -b firefox -bv 37.0 -ov XP
@@ -223,6 +226,7 @@ You'll get the ``job_id`` from response. To list available screenshots for ``job
         ]
     }
 
+Command line:
 .. code:: bash
 
     $ browserstacker list_screenshots 13b93a14db22872fcb5fd1c86b730a51197db319
@@ -233,6 +237,7 @@ To download screenshots:
 
     >>> api.download_screenshots(response['job_id'], 'path_to_screenshots_dir')
 
+Command line:
 .. code:: bash
 
     $ browserstacker download_screenshots 13b93a14db22872fcb5fd1c86b730a51197db319 -d screenshots_dir
@@ -245,6 +250,7 @@ Also you can use shortcut to create & download screenshots to your local machine
 
     >>> response = api.make_screenshots('http://www.google.com', browser, destination='path_to_screenshots_dir')
 
+Command line:
 .. code:: bash
 
     $ browserstacker make_screenshots -os Windows -b firefox -bv 37.0 -ov XP -d screenshots_dir
