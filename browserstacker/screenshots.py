@@ -71,17 +71,11 @@ class ScreenShotsAPI(object):
         self.logger.info('Username: %s; Password: %s;', user, key)
         self.logger.info('Default browser: %s;', self.default_browser)
 
-    @property
-    def session(self):
-        if not hasattr(self, '_session'):
-            self._session = requests.Session()
-        return self._session
-
     def execute(self, method, url, **kwargs):
         url = urljoin(self.root_url, url)
         self.logger.debug('Making "%s" request to "%s" with "%s"', method, url, str(kwargs))
         kwargs.setdefault('auth', self.auth)
-        response = self.session.request(method, url, **kwargs)
+        response = requests.request(method, url, **kwargs)
         self.logger.debug('Response: "%s"', response.content)
         response = response.json()
         if isinstance(response, dict):
@@ -158,7 +152,7 @@ class ScreenShotsAPI(object):
         filename = image_url.split('/')[-1]
         if image_url in self._cache:
             return
-        image_response = self.session.get(image_url, stream=True)
+        image_response = requests.get(image_url, stream=True)
         if destination:
             self.ensure_dir(destination)
             filename = os.path.join(destination, filename)

@@ -6,6 +6,7 @@ History
 * Changed commands names.
 * Fixed logger setup.
 * Initial support for retries (#3).
+* Dropped sessions support due auth complications.
 
 0.3 - 11.02.2016
 ---------
