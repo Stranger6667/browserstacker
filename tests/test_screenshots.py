@@ -17,9 +17,9 @@ def test_execute(screenshots_api, mocked_request):
     )
 
 
-def test_list_browsers(screenshots_api, list_browsers_response):
-    screenshots_api.list_browsers()
-    list_browsers_response.assert_called_with(
+def test_browsers(screenshots_api, browsers_response):
+    screenshots_api.browsers()
+    browsers_response.assert_called_with(
         'GET',
         'https://www.browserstack.com/screenshots/browsers.json',
         auth=screenshots_api.auth
@@ -61,17 +61,17 @@ parametrize_filtration = pytest.mark.parametrize(
 
 
 @parametrize_filtration
-def test_list_browsers_filtration(screenshots_api, list_browsers_response, filters, expected):
-    assert screenshots_api.list_browsers(**filters) == expected
+def test_browsers_filtration(screenshots_api, browsers_response, filters, expected):
+    assert screenshots_api.browsers(**filters) == expected
 
 
 @parametrize_filtration
-def test_list_browsers_filtration_lowercase(screenshots_api, list_browsers_response, filters, expected):
+def test_browsers_filtration_lowercase(screenshots_api, browsers_response, filters, expected):
     filters = dict((key, value.lower() if isinstance(value, str) else value) for key, value in filters.items())
-    assert screenshots_api.list_browsers(**filters) == expected
+    assert screenshots_api.browsers(**filters) == expected
 
 
-def test_make_screenshots(screenshots_api, mocked_request, mocked_get, mocked_image_response, test_dir_name, mocked_open):
+def test_make(screenshots_api, mocked_request, mocked_get, mocked_image_response, test_dir_name, mocked_open):
     url = 'http://www.example.com'
     mocked_request().json.return_value = {
         'job_id': '123',
@@ -81,7 +81,7 @@ def test_make_screenshots(screenshots_api, mocked_request, mocked_get, mocked_im
     }
     mocked_get.return_value = mocked_image_response
 
-    screenshots_api.make_screenshots(url, [{}], destination=test_dir_name)
+    screenshots_api.make(url, [{}], destination=test_dir_name)
 
     mocked_request._mock_mock_calls[1].assert_called_with(
         'POST',
@@ -104,9 +104,9 @@ def test_make_screenshots(screenshots_api, mocked_request, mocked_get, mocked_im
         ([{}], [{}]),
     )
 )
-def test_generate_screenshots(screenshots_api, mocked_request, browsers, resulting_browsers):
+def test_generate(screenshots_api, mocked_request, browsers, resulting_browsers):
     url = 'http://www.example.com'
-    screenshots_api.generate_screenshots(url, browsers)
+    screenshots_api.generate(url, browsers)
     mocked_request.assert_called_with(
         'POST',
         'https://www.browserstack.com/screenshots',
@@ -115,9 +115,9 @@ def test_generate_screenshots(screenshots_api, mocked_request, browsers, resulti
     )
 
 
-def test_list_screenshots(screenshots_api, mocked_request):
+def test_list(screenshots_api, mocked_request):
     job_id = 'be9989892cbba9b9edc2c95f403050aa4996ac6a'
-    screenshots_api.list_screenshots(job_id)
+    screenshots_api.list(job_id)
     mocked_request.assert_called_with(
         'GET',
         'https://www.browserstack.com/screenshots/%s.json' % job_id,
@@ -153,20 +153,20 @@ def test_ensure_dir_exists(screenshots_api, test_dir_name):
         ('test_dir', 'test_dir/test_save.jpg')
     )
 )
-def test_save_screenshot(screenshots_api, mocked_get, mocked_open, mocked_image_response, destination, filename):
+def test_save(screenshots_api, mocked_get, mocked_open, mocked_image_response, destination, filename):
     mocked_get.return_value = mocked_image_response
-    screenshots_api.save_screenshot(IMAGE_URL, destination)
+    screenshots_api.save(IMAGE_URL, destination)
     # `open` args
     assert mocked_open._mock_mock_calls[0][1] == (filename, 'wb')
     # `fd.write` args
     assert mocked_open._mock_mock_calls[2][1] == (mocked_image_response.content, )
 
 
-def test_download_screenshots(screenshots_api, test_dir_name, mocked_get, mocked_open, mocked_image_response):
+def test_download(screenshots_api, test_dir_name, mocked_get, mocked_open, mocked_image_response):
     mocked_get.return_value = mocked_image_response
-    with patch.object(screenshots_api, 'list_screenshots') as list_screenshots:
-        list_screenshots.return_value = {'screenshots': [{'image_url': IMAGE_URL}]}
-        screenshots_api.download_screenshots('123', test_dir_name)
+    with patch.object(screenshots_api, 'list') as list:
+        list.return_value = {'screenshots': [{'image_url': IMAGE_URL}]}
+        screenshots_api.download('123', test_dir_name)
     # `open` args
     assert mocked_open._mock_mock_calls[0][1] == (os.path.join(test_dir_name, 'test_save.jpg'), 'wb')
     # `fd.write` args

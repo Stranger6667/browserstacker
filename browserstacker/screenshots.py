@@ -73,7 +73,7 @@ class ScreenShotsAPI(object):
         self.logger.debug('Response: "%s"', response.content)
         return response.json()
 
-    def list_browsers(self, browser=None, browser_version=None, device=None, os=None, os_version=None):
+    def browsers(self, browser=None, browser_version=None, device=None, os=None, os_version=None):
         """
         Returns list of available browsers & OS.
         """
@@ -84,14 +84,14 @@ class ScreenShotsAPI(object):
             response = [item for item in response if match_item(key, value, item)]
         return response
 
-    def make_screenshots(self, url, browsers=None, destination=None, **kwargs):
+    def make(self, url, browsers=None, destination=None, **kwargs):
         """
         Generates screenshots for given settings and saves it to specified destination.
         """
-        response = self.generate_screenshots(url, browsers, **kwargs)
-        self.download_screenshots(response['job_id'], destination)
+        response = self.generate(url, browsers, **kwargs)
+        self.download(response['job_id'], destination)
 
-    def generate_screenshots(self, url, browsers=None, orientation=None, mac_res=None, win_res=None,
+    def generate(self, url, browsers=None, orientation=None, mac_res=None, win_res=None,
                              quality=None, local=None, wait_time=None, callback_url=None):
         """
         Generates screenshots for a URL.
@@ -103,22 +103,22 @@ class ScreenShotsAPI(object):
         data = dict((key, value) for key, value in locals().items() if value is not None and key != 'self')
         return self.execute('POST', '/screenshots', json=data)
 
-    def list_screenshots(self, job_id):
+    def list(self, job_id):
         """
         Generate the list of screenshots and their states.
         """
         return self.execute('GET', '/screenshots/%s.json' % job_id)
 
-    def download_screenshots(self, job_id, destination=None):
+    def download(self, job_id, destination=None):
         """
         Downloads all screenshots for given job_id to `destination` folder.
         If `destination` is None, then screenshots will be saved in current directory.
         """
-        response = self.list_screenshots(job_id)
+        response = self.list(job_id)
         for screenshot in response['screenshots']:
-            self.save_screenshot(screenshot['image_url'], destination)
+            self.save(screenshot['image_url'], destination)
 
-    def save_screenshot(self, image_url, destination=None):
+    def save(self, image_url, destination=None):
         image_response = self.session.get(image_url, stream=True)
         filename = image_url.split('/')[-1]
         if destination:

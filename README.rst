@@ -35,7 +35,7 @@ To start working with BrowserStack ScreenShots API simply type:
 
     >>> from browserstacker import ScreenShotsAPI
     >>> api = ScreenShotsAPI('user', 'key')
-    >>> api.list_browsers()
+    >>> api.browsers()
     [
         {
           "os": "Windows",
@@ -54,11 +54,11 @@ To start working with BrowserStack ScreenShots API simply type:
       ....
     ]
 
-Optionally you can filter the output of ``list_browsers`` by ``browser``, ``browser_version``, ``device``, ``os`` or ``os_version``.
+Optionally you can filter the output of ``browsers`` by ``browser``, ``browser_version``, ``device``, ``os`` or ``os_version``.
 
 .. code:: python
 
-    >>> api.list_browsers(os='Windows', browser='chrome')
+    >>> api.browsers(os='Windows', browser='chrome')
     [
         {
           "os": "Windows",
@@ -81,7 +81,7 @@ Command line:
 
 .. code:: bash
 
-    $ browserstacker list_browsers -os Windows -b chrome
+    $ browserstacker browsers -os Windows -b chrome
     Available browsers:
 
     ------
@@ -101,7 +101,7 @@ Also it is possible to filter by multiple values:
 
 .. code:: python
 
-    >>> api.list_browsers(os='Windows', browser=('chrome', 'firefox'))
+    >>> api.browsers(os='Windows', browser=('chrome', 'firefox'))
     [
         {
           "os": "Windows",
@@ -124,7 +124,7 @@ Command line:
 
 .. code:: bash
 
-    $ browserstacker list_browsers -os Windows -b chrome -b firefox
+    $ browserstacker browsers -os Windows -b chrome -b firefox
     Available browsers:
 
     ------
@@ -141,21 +141,21 @@ To generate screenshots:
 
 .. code:: python
 
-    >>> browser = api.list_browsers()[0]
-    >>> response = api.generate_screenshots('http://www.google.com', browser)
+    >>> browser = api.browsers()[0]
+    >>> response = api.generate('http://www.google.com', browser)
 
 Command line:
 
 .. code:: bash
 
-    $ browserstacker generate_screenshots http://www.google.com -os Windows -b firefox -bv 37.0 -ov XP
+    $ browserstacker generate http://www.google.com -os Windows -b firefox -bv 37.0 -ov XP
 
 Here you can pass single browsers or list of them.
 You'll get the ``job_id`` from response. To list available screenshots for ``job_id``:
 
 .. code:: python
 
-    >>> api.list_screenshots(response['job_id'])
+    >>> api.list(response['job_id'])
     {
         "id":"13b93a14db22872fcb5fd1c86b730a51197db319",
         "state":"done",
@@ -184,19 +184,19 @@ Command line:
 
 .. code:: bash
 
-    $ browserstacker list_screenshots 13b93a14db22872fcb5fd1c86b730a51197db319
+    $ browserstacker list 13b93a14db22872fcb5fd1c86b730a51197db319
 
 To download screenshots:
 
 .. code:: python
 
-    >>> api.download_screenshots(response['job_id'], 'path_to_screenshots_dir')
+    >>> api.download(response['job_id'], 'path_to_screenshots_dir')
 
 Command line:
 
 .. code:: bash
 
-    $ browserstacker download_screenshots 13b93a14db22872fcb5fd1c86b730a51197db319 -d screenshots_dir
+    $ browserstacker download 13b93a14db22872fcb5fd1c86b730a51197db319 -d screenshots_dir
 
 All screenshots will be saved in 'path_to_screenshots_dir'. If ``destination`` kwarg is absent, then screenshots will be
 downloaded to current working directory.
@@ -204,13 +204,13 @@ Also you can use shortcut to create & download screenshots to your local machine
 
 .. code:: python
 
-    >>> response = api.make_screenshots('http://www.google.com', browser, destination='path_to_screenshots_dir')
+    >>> response = api.make('http://www.google.com', browser, destination='path_to_screenshots_dir')
 
 Command line:
 
 .. code:: bash
 
-    $ browserstacker make_screenshots -os Windows -b firefox -bv 37.0 -ov XP -d screenshots_dir
+    $ browserstacker make -os Windows -b firefox -bv 37.0 -ov XP -d screenshots_dir
 
 Command line interface
 ~~~~~~~~~~~~~~~~~~~~~~
@@ -223,7 +223,7 @@ To use CLI you have to pass user & key directly:
 
 .. code:: bash
 
-    $ browserstacker -u user -k key list_browsers
+    $ browserstacker -u user -k key browsers
     Available browsers:
     ...
     Total browsers: 629
@@ -234,7 +234,7 @@ Or via environment variables:
 
     $ export BROWSERSTACK_USER=user
     $ export BROWSERSTACK_KEY=key
-    $ browserstacker list_browsers
+    $ browserstacker browsers
 
 Help is also available:
 
@@ -251,12 +251,11 @@ Help is also available:
       --help           Show this message and exit.
 
     Commands:
-      download_screenshots
-      generate_screenshots
-      list_browsers
-      list_screenshots
-      make_screenshots
-      save_screenshot
+      download
+      generate
+      browsers
+      list
+      make
 
 Python support
 --------------

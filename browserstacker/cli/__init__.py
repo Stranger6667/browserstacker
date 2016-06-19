@@ -43,16 +43,16 @@ def screenshots_options(func):
 
 @browserstacker_command
 @browsers_options
-def list_browsers(api, **kwargs):
+def browsers(api, **kwargs):
     click.echo('Available browsers:')
-    browsers = api.list_browsers(**kwargs)
+    browsers = api.browsers(**kwargs)
     click.echo(format_browsers(browsers))
     click.echo('Total browsers: %s' % len(browsers))
 
 
 def get_browsers(api, browser, browser_version, os, os_version, device):
     if any([browser, browser_version, os, os_version, device]):
-        return api.list_browsers(browser, browser_version, device, os, os_version)
+        return api.browsers(browser, browser_version, device, os, os_version)
 
 
 @browserstacker_command
@@ -60,35 +60,28 @@ def get_browsers(api, browser, browser_version, os, os_version, device):
 @click.option('-ds', '--destination', help='Directory to save the images')
 @browsers_options
 @screenshots_options
-def make_screenshots(api, url, browser, browser_version, os, os_version, device, **kwargs):
+def make(api, url, browser, browser_version, os, os_version, device, **kwargs):
     kwargs['browsers'] = get_browsers(api, browser, browser_version, device, os, os_version)
-    click.echo(api.make_screenshots(url, **kwargs))
+    click.echo(api.make(url, **kwargs))
 
 
 @browserstacker_command
 @click.argument('url', required=True)
 @browsers_options
 @screenshots_options
-def generate_screenshots(api, url, browser, browser_version, os, os_version, device, **kwargs):
+def generate(api, url, browser, browser_version, os, os_version, device, **kwargs):
     kwargs['browsers'] = get_browsers(api, browser, browser_version, device, os, os_version)
-    click.echo(api.generate_screenshots(url, **kwargs))
+    click.echo(api.generate(url, **kwargs))
 
 
 @browserstacker_command
 @click.argument('job_id', required=True)
-def list_screenshots(api, job_id):
-    click.echo(api.list_screenshots(job_id))
+def list(api, job_id):
+    click.echo(api.list(job_id))
 
 
 @browserstacker_command
 @click.argument('job_id', required=True)
 @click.option('-ds', '--destination', help='Directory to save the images')
-def download_screenshots(api, job_id, destination):
-    click.echo(api.download_screenshots(job_id, destination))
-
-
-@browserstacker_command
-@click.argument('image_url', required=True)
-@click.option('-ds', '--destination', help='Directory to save the image')
-def save_screenshot(api, image_url, destination):
-    click.echo(api.save_screenshot(image_url, destination))
+def download(api, job_id, destination):
+    click.echo(api.download(job_id, destination))

@@ -26,8 +26,8 @@ def mocked_get(request):
 
 
 @pytest.fixture
-def list_browsers_response(mocked_request):
-    mocked_request().json.return_value = LIST_BROWSERS_RESPONSE
+def browsers_response(mocked_request):
+    mocked_request().json.return_value = BROWSERS_RESPONSE
     return mocked_request
 
 
@@ -69,7 +69,7 @@ def mocked_open(request):
 
 IMAGE_URL = 'http://www.example/screenshots/test_save.jpg'
 
-LIST_BROWSERS_RESPONSE = [
+BROWSERS_RESPONSE = [
     {'os': 'Windows', 'browser': 'safari', 'os_version': '8', 'browser_version': '5.1', 'device': None},
     {'os': 'Windows', 'browser': 'firefox', 'os_version': '7', 'browser_version': '30.0', 'device': None},
     {'os': 'OS X', 'browser': 'chrome', 'os_version': 'Lion', 'browser_version': '17.0', 'device': None},
