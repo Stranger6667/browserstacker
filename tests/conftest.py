@@ -49,18 +49,14 @@ def mocked_image_response():
     return MockedContent()
 
 
-@pytest.fixture
-def test_dir_name(request):
+@pytest.yield_fixture
+def test_dir_name():
     directory_name = 'test_dir'
-
-    def clean():
-        try:
-            os.rmdir(directory_name)
-        except:
-            pass
-
-    request.addfinalizer(clean)
-    return directory_name
+    yield directory_name
+    try:
+        os.rmdir(directory_name)
+    except:
+        pass
 
 
 @pytest.fixture

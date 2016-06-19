@@ -131,8 +131,10 @@ class ScreenShotsAPI(object):
         """
         Checks, that `destination` exists.
         """
-        if not os.path.exists(destination):
+        try:
             os.makedirs(destination)
+        except OSError:
+            pass
 
     def save_file(self, filename, content):
         """
