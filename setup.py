@@ -58,7 +58,7 @@ if not JYTHON:
 setup(
     name='browserstacker',
     url='https://github.com/Stranger6667/browserstacker',
-    version='0.3',
+    version='0.3.1',
     packages=['browserstacker'],
     license='MIT',
     author='Dmitry Dygalo',
