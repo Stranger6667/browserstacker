@@ -86,7 +86,7 @@ def test_generate_with_browsers(isolated_cli_runner, mocked_request):
 
 
 def test_download(isolated_cli_runner, mocked_request, mocked_get, mocked_image_response):
-    mocked_request().json.return_value = {'job_id': JOB_ID, 'screenshots': [{'image_url': IMAGE_URL}]}
+    mocked_request().json.return_value = {'job_id': JOB_ID, 'screenshots': [{'image_url': IMAGE_URL, 'state': 'done'}]}
     mocked_get.return_value = mocked_image_response
     result = isolated_cli_runner.invoke(cli, ['-vv', 'download', JOB_ID], catch_exceptions=False)
     assert not result.exception

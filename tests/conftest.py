@@ -25,13 +25,18 @@ def mocked_get(request):
     return _make_mock(request, 'browserstacker.screenshots.requests.Session.get', Mock())
 
 
+@pytest.fixture(autouse=True)
+def sleep(request):
+    return _make_mock(request, 'browserstacker.screenshots.sleep', Mock())
+
+
 @pytest.fixture
 def browsers_response(mocked_request):
     mocked_request().json.return_value = BROWSERS_RESPONSE
     return mocked_request
 
 
-@pytest.fixture(scope='session')
+@pytest.fixture
 def screenshots_api():
     return ScreenShotsAPI(None, None)
 

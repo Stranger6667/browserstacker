@@ -1,10 +1,11 @@
 History
 -------
 
-0.3.1 - 11.02.2016
+0.3.1 - 19.06.2016
 
 * Changed commands names.
 * Fixed logger setup.
+* Initial support for retries (#3).
 
 0.3 - 11.02.2016
 ---------

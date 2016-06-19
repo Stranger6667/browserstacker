@@ -76,7 +76,7 @@ def test_make(screenshots_api, mocked_request, mocked_get, mocked_image_response
     mocked_request().json.return_value = {
         'job_id': '123',
         'screenshots': [
-            {'image_url': 'http://www.example.com/img/test_image.jpg'}
+            {'image_url': 'http://www.example.com/img/test_image.jpg', 'state': 'done'}
         ]
     }
     mocked_get.return_value = mocked_image_response
@@ -165,7 +165,7 @@ def test_save(screenshots_api, mocked_get, mocked_open, mocked_image_response, d
 def test_download(screenshots_api, test_dir_name, mocked_get, mocked_open, mocked_image_response):
     mocked_get.return_value = mocked_image_response
     with patch.object(screenshots_api, 'list') as list:
-        list.return_value = {'screenshots': [{'image_url': IMAGE_URL}]}
+        list.return_value = {'screenshots': [{'image_url': IMAGE_URL, 'state': 'done'}]}
         screenshots_api.download('123', test_dir_name)
     # `open` args
     assert mocked_open._mock_mock_calls[0][1] == (os.path.join(test_dir_name, 'test_save.jpg'), 'wb')

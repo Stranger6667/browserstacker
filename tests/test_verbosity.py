@@ -53,7 +53,7 @@ def test_download(capsys, mocked_open, mocked_get, mocked_image_response, test_d
     api = ScreenShotsAPI('user', 'pass', verbosity=2)
     mocked_get.return_value = mocked_image_response
     with patch.object(api, 'list') as list_screenshots:
-        list_screenshots.return_value = {'screenshots': [{'image_url': IMAGE_URL}]}
+        list_screenshots.return_value = {'screenshots': [{'image_url': IMAGE_URL, 'state': 'done'}]}
         api.download('123', test_dir_name)
     assert capsys.readouterr()[0].split('\n')[-2] == 'browserstacker.screenshots - DEBUG - Saving ' \
                                                      '"http://www.example/screenshots/test_save.jpg" to ' \

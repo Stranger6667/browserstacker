@@ -2,14 +2,24 @@
 import logging
 import os
 import sys
+from time import sleep
 
 import requests
-from requests.auth import HTTPBasicAuth
 
 from ._compat import urljoin
 
 
 DEFAULT_LOGGING_LEVEL = logging.CRITICAL
+DEFAULT_TIMEOUT = 10
+DEFAULT_RETRIES = 6
+
+
+class AuthError(RuntimeError):
+    pass
+
+
+class ParallelLimitReached(RuntimeError):
+    pass
 
 
 def get_logger(verbosity):
@@ -54,8 +64,9 @@ class ScreenShotsAPI(object):
     }
 
     def __init__(self, user, key, default_browser=None, verbosity=0):
-        self.auth = HTTPBasicAuth(user, key)
+        self.auth = requests.auth.HTTPBasicAuth(user, key)
         self.default_browser = default_browser or self.default_browser
+        self._cache = {}
         self.logger = get_logger(verbosity)
         self.logger.info('Username: %s; Password: %s;', user, key)
         self.logger.info('Default browser: %s;', self.default_browser)
@@ -72,7 +83,13 @@ class ScreenShotsAPI(object):
         kwargs.setdefault('auth', self.auth)
         response = self.session.request(method, url, **kwargs)
         self.logger.debug('Response: "%s"', response.content)
-        return response.json()
+        response = response.json()
+        if isinstance(response, dict):
+            if response.get('message') == 'Parallel limit reached':
+                raise ParallelLimitReached
+            elif response.get('error') == 'Sign up or sign in':
+                raise AuthError
+        return response
 
     def browsers(self, browser=None, browser_version=None, device=None, os=None, os_version=None):
         """
@@ -85,12 +102,12 @@ class ScreenShotsAPI(object):
             response = [item for item in response if match_item(key, value, item)]
         return response
 
-    def make(self, url, browsers=None, destination=None, **kwargs):
+    def make(self, url, browsers=None, destination=None, timeout=DEFAULT_TIMEOUT, retries=DEFAULT_RETRIES, **kwargs):
         """
         Generates screenshots for given settings and saves it to specified destination.
         """
         response = self.generate(url, browsers, **kwargs)
-        self.download(response['job_id'], destination)
+        return self.download(response['job_id'], destination, timeout, retries)
 
     def generate(self, url, browsers=None, orientation=None, mac_res=None, win_res=None,
                              quality=None, local=None, wait_time=None, callback_url=None):
@@ -110,23 +127,44 @@ class ScreenShotsAPI(object):
         """
         return self.execute('GET', '/screenshots/%s.json' % job_id)
 
-    def download(self, job_id, destination=None):
+    def download(self, job_id, destination=None, timeout=DEFAULT_TIMEOUT, retries=DEFAULT_RETRIES):
         """
         Downloads all screenshots for given job_id to `destination` folder.
         If `destination` is None, then screenshots will be saved in current directory.
         """
+        self._retries_num = 0
+        sleep(timeout)
+        self.save_many(job_id, destination, timeout, retries)
+        return self._cache
+
+    def save_many(self, job_id, destination, timeout, retries):
         response = self.list(job_id)
         for screenshot in response['screenshots']:
+            state = screenshot['state']
+            if state == 'timed-out':
+                continue
+            if self._retries_num >= retries:
+                self.logger.debug('Retry limit exceeded for %s' % job_id)
+                break
+            if state != 'done' or not screenshot['image_url']:
+                self.logger.debug('Retrying download for %s' % job_id)
+                self._retries_num += 1
+                sleep(timeout)
+                self.save_many(job_id, destination, timeout, retries)
+                break
             self.save(screenshot['image_url'], destination)
 
     def save(self, image_url, destination=None):
-        image_response = self.session.get(image_url, stream=True)
         filename = image_url.split('/')[-1]
+        if image_url in self._cache:
+            return
+        image_response = self.session.get(image_url, stream=True)
         if destination:
             self.ensure_dir(destination)
             filename = os.path.join(destination, filename)
         self.logger.debug('Saving "%s" to "%s" ...', image_url, filename)
         self.save_file(filename, image_response)
+        self._cache[image_url] = filename
 
     def ensure_dir(self, destination):
         """
