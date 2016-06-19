@@ -1,7 +1,7 @@
 History
 -------
 
-0.3 - TBD
+0.3 - 11.02.2016
 ---------
 
 * Added verbose output option (#9).
