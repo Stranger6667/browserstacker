@@ -95,28 +95,6 @@ def test_download(isolated_cli_runner, mocked_request, mocked_get, mocked_image_
     assert os.path.exists('test_save.jpg')
 
 
-@pytest.mark.parametrize(
-    'args, expected_path',
-    (
-        (['save', IMAGE_URL], 'test_save.jpg'),
-        (['save', IMAGE_URL, '-ds', 'test'], 'test/test_save.jpg'),
-    )
-)
-def test_save(isolated_cli_runner, mocked_get, mocked_image_response, args, expected_path):
-    mocked_get.return_value = mocked_image_response
-    result = isolated_cli_runner.invoke(cli, args, catch_exceptions=False)
-    assert not result.exception
-    assert os.path.exists(expected_path)
-
-
-def test_save_to_existing_dir(isolated_cli_runner, mocked_get, mocked_image_response):
-    os.makedirs('test')
-    mocked_get.return_value = mocked_image_response
-    result = isolated_cli_runner.invoke(cli, ['save', IMAGE_URL, '-ds', 'test'], catch_exceptions=False)
-    assert not result.exception
-    assert os.path.exists('test/test_save.jpg')
-
-
 @pytest.mark.parametrize('is_readable', (True, False))
 @pytest.mark.usefixtures('browsers_response')
 def test_readable_io_wrapper(isolated_cli_runner, is_readable):
