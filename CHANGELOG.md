@@ -4,6 +4,7 @@ History
 0.3.1 - 11.02.2016
 
 * Changed commands names.
+* Fixed logger setup.
 
 0.3 - 11.02.2016
 ---------

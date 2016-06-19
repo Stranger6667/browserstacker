@@ -22,6 +22,7 @@ def get_logger(verbosity):
         1: logging.INFO,
         2: logging.DEBUG
     }.get(min(2, verbosity), DEFAULT_LOGGING_LEVEL))
+    logger.handlers = []
     handler = logging.StreamHandler(sys.stdout)
     handler.setLevel(logging.DEBUG)
     handler.setFormatter(logging.Formatter('%(name)s - %(levelname)s - %(message)s'))
