@@ -256,7 +256,7 @@ Help is also available:
       list_browsers
       list_screenshots
       make_screenshots
-      save_screenshotove
+      save_screenshot
 
 Python support
 --------------
